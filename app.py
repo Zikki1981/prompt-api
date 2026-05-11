@@ -39,41 +39,21 @@ PRESERVE DETAILS (CRITICAL - DO NOT SIMPLIFY):
 - Example: "Her facial expressions indicate pleasure" → MUST KEEP this detail
 - The AI needs ALL these cues for realistic video generation
 
-STARTING POSE → TARGET POSE (VIDEO IS ONLY 5 SECONDS):
-- The AI sees ONE starting image - START from whatever pose is shown
-- Structure: "From her current pose, [quick transition] into [target position]..."
-- Use BRIEF transitions:
-  - Movement: "she shifts into", "she moves to", "turning into"
-  - Cinema: "the camera pans to reveal", "as the angle shifts to", "cut to"
-- Examples:
-  - "From her current position, she shifts onto all fours as the side angle reveals deep anal penetration..."
-  - "The camera pans from her pose to a profile view as he begins rhythmic thrusting..."
-  - "She transitions smoothly into doggy position, the lateral angle capturing each powerful stroke..."
-- Keep transition BRIEF (1 sentence max) then focus on the ACTION
-- No fixed directions ("from the right") - use relative ("toward her")
+VIDEO IS ONLY 5 SECONDS:
+- Start from the pose shown in the image
+- Use brief transition: "she shifts into", "she moves to"
+- Then describe the ACTION in detail
+- Keep it simple and direct
 
 CLARITY:
 - "she strokes and sucks his cock" not "she pleasures him"
 - Name body parts directly
 - Who does what to whom
+- DO NOT invent camera angles or perspectives unless workflow name explicitly says it
 
-CAMERA PERSPECTIVE (ONLY IF WORKFLOW CONTEXT SPECIFIES ONE):
-- ONLY add camera perspective if the WORKFLOW CONTEXT in the user message mentions a specific angle
-- If workflow says "side view" → mention "side angle", "profile view", "lateral perspective"
-- If workflow says "pov" → use first-person perspective, "from his viewpoint"
-- If workflow says "cowgirl" → angle looking up at her from below
-- If workflow says "doggy" → behind angle
-- If NO specific angle in workflow context → DO NOT add camera perspective, focus on the ACTION only
-
-CAMERA MOVEMENTS (match the action):
-- POV oral: slow zoom in on face, subtle push in
-- Intense fucking: handheld shake, slight dolly back
-- Sensual moment: slow dolly, gentle pan following curves
-- Facial climax: slow zoom in, static hold
-- Position change: pan following the movement
-- Side view: slow lateral pan, tracking shot
-- Use: "slow zoom in", "subtle push", "gentle pan", "dolly out", "static", "handheld", "lateral tracking"
-- Choose ONE movement that enhances the scene
+CAMERA MOVEMENTS:
+- Choose ONE simple movement: "slow zoom in", "subtle push", "gentle pan", "static"
+- Match the intensity of the action
 
 TONE → STYLE TAGS:
 - sensual/romantic: soft lighting, intimate, natural skin
@@ -109,16 +89,18 @@ def improve_prompt_via_lmstudio(workflow_name: str, current_prompt: str,
 - Example: "the man thrusts deeply" → keep "man" exactly (will become "white man" or "black man")
 - Example: "she moans as the man..." → correct usage"""
 
-    # Add workflow context for POV/position hints
+    # Add workflow context ONLY for workflows with explicit camera angles
     workflow_hint = ""
     if workflow_name and workflow_name != 'unknown':
-        # Extract meaningful words from workflow name (e.g., "WAN2.2_I2V_ANAL_SIDE_VIEW_K3NK" -> "anal side view")
-        clean_name = workflow_name.upper().replace('WAN2.2_I2V_', '').replace('_K3NK', '').replace('_', ' ').lower().strip()
-        # Also try simpler format (analsideview_i2v -> anal side view)
-        if not clean_name or clean_name == workflow_name.lower():
-            clean_name = workflow_name.replace('_i2v', '').replace('_', ' ').lower().strip()
-        if clean_name:
-            workflow_hint = f"\n\n**REQUIRED CAMERA PERSPECTIVE: {clean_name.upper()}**\nYou MUST describe the scene from this angle. If it says 'side view', the camera is positioned to the side showing a profile/lateral angle. INCLUDE THIS PERSPECTIVE IN YOUR SCENARIO."
+        clean_name = workflow_name.lower().replace('_i2v', '').replace('_', ' ').strip()
+
+        # Only add camera hint for workflows that explicitly mention an angle
+        angle_keywords = ['side view', 'sideview', 'pov', 'cowgirl', 'missionary', 'reverse']
+        has_angle = any(kw in clean_name for kw in angle_keywords)
+
+        if has_angle:
+            workflow_hint = f"\n\n**CAMERA ANGLE: {clean_name.upper()}** - Describe the scene from this specific angle."
+        # For other workflows (fingering, handjob, etc.) - no camera angle hint, use default front view
 
     user_message = f"""Improve this I2V video prompt.{var_note}{race_note}{workflow_hint}
 
