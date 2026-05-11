@@ -57,13 +57,13 @@ CLARITY:
 - Name body parts directly
 - Who does what to whom
 
-CAMERA PERSPECTIVE (CRITICAL - from WORKFLOW CONTEXT):
-- When workflow says "side view" → describe the scene FROM THE SIDE, mention "side angle", "profile view", "lateral perspective"
-- When workflow says "pov" → use first-person perspective, "from his viewpoint", "looking down"
-- When workflow says "cowgirl" → camera angle looking up at her from below
-- When workflow says "doggy" → behind angle, focus on her back and penetration
-- The WORKFLOW CONTEXT in the user message tells you the required camera angle - USE IT!
-- ALWAYS mention the camera perspective in your scenario description
+CAMERA PERSPECTIVE (ONLY IF WORKFLOW CONTEXT SPECIFIES ONE):
+- ONLY add camera perspective if the WORKFLOW CONTEXT in the user message mentions a specific angle
+- If workflow says "side view" → mention "side angle", "profile view", "lateral perspective"
+- If workflow says "pov" → use first-person perspective, "from his viewpoint"
+- If workflow says "cowgirl" → angle looking up at her from below
+- If workflow says "doggy" → behind angle
+- If NO specific angle in workflow context → DO NOT add camera perspective, focus on the ACTION only
 
 CAMERA MOVEMENTS (match the action):
 - POV oral: slow zoom in on face, subtle push in
@@ -102,11 +102,12 @@ def improve_prompt_via_lmstudio(workflow_name: str, current_prompt: str,
     if supports_race:
         race_note = """
 
-**RACE VARIABLES (CRITICAL - THIS WORKFLOW USES RACE SUBSTITUTION):**
-- VARIABLES like {race_man}, {race_woman} etc: Keep them exactly, add grammar if needed: "{race_woman}'s mouth", "the {race_man}"
-- NEVER replace variables with pronouns like "he" or "she"
-- RACE WORDS (man, men, woman, women): Keep exactly as written - they get substituted later
-- Example: "the man thrusts into her" → keep "man", don't change to "he" """
+**RACE SUBSTITUTION (CRITICAL - THIS WORKFLOW USES RACE):**
+- Use literal words "man", "men", "woman", "women" - they get substituted with race later
+- DO NOT use {race_man} or {race_woman} placeholders - just use the words directly
+- NEVER replace with pronouns like "he" or "she"
+- Example: "the man thrusts deeply" → keep "man" exactly (will become "white man" or "black man")
+- Example: "she moans as the man..." → correct usage"""
 
     # Add workflow context for POV/position hints
     workflow_hint = ""
