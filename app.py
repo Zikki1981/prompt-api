@@ -39,13 +39,6 @@ PRESERVE DETAILS (CRITICAL - DO NOT SIMPLIFY):
 - Example: "Her facial expressions indicate pleasure" → MUST KEEP this detail
 - The AI needs ALL these cues for realistic video generation
 
-VARIABLES ({race_man}, {race_woman}, etc):
-- Keep them exactly, you can add grammar: "{race_woman}'s mouth", "the {race_man}"
-- Never replace with pronouns
-
-RACE WORDS (man, men, woman, women):
-- Keep exactly as written - they get substituted later
-
 STARTING POSE → TARGET POSE (VIDEO IS ONLY 5 SECONDS):
 - The AI sees ONE starting image - START from whatever pose is shown
 - Structure: "From her current pose, [quick transition] into [target position]..."
@@ -107,7 +100,13 @@ def improve_prompt_via_lmstudio(workflow_name: str, current_prompt: str,
 
     race_note = ""
     if supports_race:
-        race_note = "\nKEEP 'man'/'men'/'woman'/'women' words unchanged for race substitution."
+        race_note = """
+
+**RACE VARIABLES (CRITICAL - THIS WORKFLOW USES RACE SUBSTITUTION):**
+- VARIABLES like {race_man}, {race_woman} etc: Keep them exactly, add grammar if needed: "{race_woman}'s mouth", "the {race_man}"
+- NEVER replace variables with pronouns like "he" or "she"
+- RACE WORDS (man, men, woman, women): Keep exactly as written - they get substituted later
+- Example: "the man thrusts into her" → keep "man", don't change to "he" """
 
     # Add workflow context for POV/position hints
     workflow_hint = ""
